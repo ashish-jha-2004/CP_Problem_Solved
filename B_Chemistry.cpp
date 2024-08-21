@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+using namespace std;
+/*
+************************************************************************************************************************************************
+    Author :- Ashish Jha
+    Yug :- Kaliyug
+************************************************************************************************************************************************
+    ॐ त्र्यम्बकं यजामहे
+    सुगन्धिं पुष्टिवर्धनम् ।
+    उर्वारुकमिव बन्धनान्
+    मृत्योर्मुक्षीय मामृतात् ॥
+************************************************************************************************************************************************
+*/
+
+typedef long long ll;
+#define fl(i, j) for(int i{0}; i<j; i++)
+#define finl(i, j, k) for(int i{j}; i<k; i++)
+#define no cout << "NO\n";
+#define yes cout << "YES\n";
+
+
+void solve(){
+    // code here
+    int n, k;
+    string s;
+    cin >> n >> k >> s;
+    vector<int> cnt(26);
+    for (int i = 0; i < n; ++i) {
+        cnt[s[i] - 'a']++;
+    }
+    int cntOdd = 0;
+    for (int i = 0; i < 26; ++i) {
+        cntOdd += cnt[i] % 2;
+    }
+    if (cntOdd - 1 <= k) {
+        cout << "YES\n";
+    } else {
+        cout << "NO\n";
+    }
+    
+}
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    int t;
+    cin >> t;
+    while (t--){
+        solve();
+    }
+    return 0;
+}
