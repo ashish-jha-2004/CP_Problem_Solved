@@ -1,0 +1,29 @@
+**Basic rules**
+
+--> The result of reading the statement is usually pure math model. If story helps to build correct understanding, you can keep it, but still try to discard as many unnecessary details as possible.
+--> Imagine you want to tell the problem to someone else. What parts you want to tell? (According to my PM, this rule won't help you).
+--> Shorter = better.
+--> Simpler = better.
+--> Limitations are part of problem statement. Especially small limitations, because for small data you can try all the possibilities.
+--> Samples are part of problem statement. After building math model, check that you model working correct on samples, at least on small samples where you can check everything fast.
+--> Notes are part of problem statement.
+--> Try to find familiar patterns, maybe objects you already know something about. If you are given some connected graph with exactly one simple path between each pair of vertices, it's called tree. 4 letters instead of 12 words, see?
+--> Try even harder to spot something strange, something you not expecting. That probably will be the cornerstone of the problem.
+--> If there is some part of the statement you don't like, try to change that to something you like. Start with understanding the object, then simplify it. There are some problems which can be completely solved by this technique.
+--> If the model you get is very big, try to split it into some pieces. It would be great if pieces are independent, like 'solve problem1, then use its answer as input to problem2 and so on'.
+--> On first stages it can be useful to write your new statement. On paper. By hand.
+--> Problemsetters do not write random things in statements. But why would you believe me, since I'm a bad problemsetter? I don't know, maybe you shouldn't.
+
+
+************************************************************************************************************************************************************************************************************************************************************************************
+************************************************************************************************************************************************************************************************************************************************************************************
+
+
+--> Look at the Time Complexity very carefully because I have encounter this problem today in which 
+    value of (n) was 2^11 and the algorithm T.C depends upon (n). So, I thought may be atmost O(n(log(n)))
+    algorithm will work... "BUT BUT" if you look carefully then [2^11 = 2048] this allows us to write
+    an algorithm uptill O(n^2). 
+--> First thinking of the greedy approach is better before looking for dp in any problem...
+--> When you are dealing with alphabets the remember there are only 26 "Alphabets".
+--> Always think about hashing based pre-computation if simple pre-computation doesn't work.
+--> In some of the DP problems start filling the dp[arr] from the last...
