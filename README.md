@@ -26,11 +26,8 @@ Repository Structure
     └── README.md
     
 
-*   **platform-name**: Directory named after the platform (e.g., Codeforces, LeetCode, etc.)
-*   **problem-name**: Directory named after the specific problem.
-*   **solution.cpp**: The solution file written in C++.
-*   **explanation.md**: Optional file where I explain the approach and logic behind the solution.
-*   **test\_cases**: Folder containing sample input and output files used for testing.
+*   **problem_name.cpp**: file named after the specific problem.
+
 
 How to Use
 ----------
@@ -48,8 +45,8 @@ How to Use
     Compile and run the solution on your local machine using a C++ compiler:
     
         
-        g++ -o solution solution.cpp
-        ./solution
+        g++ -o problem_name problem_name.cpp
+        ./problem_name
 
     get your testcases from problem site. (above mentioned in Navigate to the problem section)
                     
