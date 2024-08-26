@@ -34,7 +34,7 @@ How to Use
 
 1.  **Clone the Repository:**
     
-        git clone https://github.com/yourusername/competitive-programming.git
+        git clone https://github.com/ashish-jha-2004/CP_Problem_Solved
     
 2.  **Navigate to the Problem:**
     
