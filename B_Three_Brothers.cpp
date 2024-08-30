@@ -29,26 +29,33 @@ using namespace std;
 ****************************************************************************************************************************************************************************************************************************************************************************
 */
 
-// Debuging Tools For CP
+// Debugging Tools For CP
 #ifndef ONLINE_JUDGE
 #include <debugtemplate.hpp>
 #else
 #define debug(...)
 #endif
+
 typedef long double ld;
 typedef long long ll;
 typedef vector<int> vi;
 typedef vector<ll> vl;
+typedef vector<vector<ll>> vvl;
 typedef vector<char> vc;
-typedef pair<int, int> pii;
-typedef pair<int, char> pic;
+typedef pair<ll, ll> pll;
+typedef pair<ll, char> plc;
 #define fl(i, j) for(int i{0}; i<j; i++)
 #define fb(i, j, k) for (int i{j}; i>=k; i--)
 #define fn(i, j, k) for(int i{j}; i<k; i++)
 #define no cout << "NO\n"
 #define yes cout << "YES\n"
 #define all(v) v.begin(), v.end()
-#define d_n(n) ll n; cin >> n
+#define rall(v) v.rbegin(), v.rend()
+#define DEFINE_AND_READ(type, ...) type __VA_ARGS__; read(__VA_ARGS__)
+#define d_n(...) DEFINE_AND_READ(ll, __VA_ARGS__)
+#define d_s(...) DEFINE_AND_READ(string, __VA_ARGS__)
+#define d_c(...) DEFINE_AND_READ(char, __VA_ARGS__)
+#define d_d(...) DEFINE_AND_READ(ld, __VA_ARGS__)
 #define d_v(v, n) vl v(n); fl(i, n) cin >> v[i]
 #define en "\n"
 #define F first
@@ -80,6 +87,10 @@ ostream &operator<<(ostream &ostream, const vector<T> &c)
         cout << it << " ";
     return ostream;
 }
+template<typename... T>
+void read(T&... args) {
+    (cin >> ... >> args);
+}
 
 // Number Theory
 const ll MOD = 1e9+7, mod = MOD;
@@ -99,34 +110,22 @@ ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,i
 
 void solve(){
     // code here
-    d_n(n);
-    if (!(n&1)) no;
-    else {
-        yes;
-        vector<pair<ll, ll>> vp;
-        ll temp = n/2 + 1;
-        set<ll> s;
-        fn(i, 1, temp+1) {
-            vp.PB({i, 2*(n-i+1)});
-            s.insert(2*(n-i+1) - 1);
-        }
-        s.erase(s.B);
-        fn(i, temp+1, n+1) {
-            vp.PB({i, *(--s.E)});
-            s.erase(*(--s.E));
-        }
-        debug(vp);
-        for(auto &k: vp) {
-            cout << k.F << " " << k.S << en;
+    d_n(a, b);
+    set<ll> s;
+    s.insert(a);
+    s.insert(b);
+    for (auto k: {1, 2, 3}){
+        if (s.count(k) == 0) {
+            cout << k << en;
+            break;
         }
     }
-
 }
 
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    d_n(t);
+    uint8_t t = 1;
     while (t--){
         solve();
     }
