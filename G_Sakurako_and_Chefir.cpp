@@ -107,41 +107,79 @@ ll binToDec(string s) { return bitset<64>(s).to_ullong(); }
 string decToBin(ll a) { return bitset<64>(a).to_string(); }
 ll factorial(ll n){if (n==0){ return 1;} ll ans=1;for (ll i=1;i<=n;i++) { ans=mod_mul(ans,i); } return ans; }
 ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,inv(factorial(r))); ans=mod_mul(ans,inv(factorial(n-r))); return ans; }
-
-int dfs(int node, unordered_map<int, list<int>> &graph, vector<bool> &vis) {
-    if (vis[node] == 1) return 0;
-    vis[node] = 1;
-    int ans = 0;
-    for (auto child: graph[node]) {
-        ans += dfs(child, graph, vis) + 1;
-    }
-    return ans;
+const int N = 2e5 + 5, M = N * 2;
+ 
+int h[N], e[M], ne[M], idx;
+int d[N], f1[N], f2[N];
+int fa[N][18], g[N][18];
+ 
+void add(int u, int v) {
+    e[idx] = v, ne[idx] = h[u], h[u] = idx++;
 }
-
-void solve(){
-    // code here
-    d_n(n);
-    unordered_map<int, list<int>> graph;
-    vector<bool> vis(n+1, 0);
-    fn(i, 1, n+1) {
-        d_n(x);
-        graph[i].PB(x);
+ 
+void dfs1(int u, int p) {
+    d[u] = d[p] + 1;
+    f1[u] = f2[u] = 0;
+    for (int i = h[u]; i != -1; i = ne[i]) {
+        int v = e[i];
+        if (v == p) continue;
+        dfs1(v, u);
+        int t = f1[v] + 1;
+        if (t > f1[u]) f2[u] = f1[u], f1[u] = t;
+        else if (t > f2[u]) f2[u] = t;
     }
-    int cnt = 0;
-    fn(i, 1, n+1) {
-        if (vis[i] == 0) {
-            int k = dfs(i, graph, vis) - 1;
-            cnt = cnt + (k) / 2;
+}
+ 
+void dfs2(int u, int p) {
+    fa[u][0] = p;
+    if (f1[p] == f1[u] + 1) g[u][0] = f2[p] - d[p];
+    else g[u][0] = f1[p] - d[p];
+    for (int i = 1; i <= 17; i++) {
+        fa[u][i] = fa[fa[u][i - 1]][i - 1];
+        g[u][i] = max(g[u][i - 1], g[fa[u][i - 1]][i - 1]);
+    }
+    for (int i = h[u]; i != -1; i = ne[i]) {
+        int v = e[i];
+        if (v == p) continue;
+        dfs2(v, u);
+    }
+}
+ 
+void solve() {
+    int n, m;
+    cin >> n;
+    idx = 0;
+    memset(h, -1, n + 1 << 2);
+    for (int i = 0; i < n - 1; i++) {
+        int u, v;
+        cin >> u >> v;
+        add(u, v), add(v, u);
+    }
+    dfs1(1, 0);
+    dfs2(1, 0);
+    cin >> m;
+    while (m--) {
+        int x, k;
+        cin >> x >> k;
+        k = min(k, d[x] - 1);
+        int ret = f1[x], t = d[x];
+        for (int i = 0; i <= 17; i++) {
+            if (k >> i & 1 && x) {
+                ret = max(ret, g[x][i] + t);
+                x = fa[x][i];
+            }
         }
+        cout << ret << ' ';
     }
-    cout << cnt << en;
+    cout << en;
 }
-
-int main(){
+ 
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    d_n(t);
-    while (t--){
+    int t;
+    cin >> t;
+    while (t--) {
         solve();
     }
     return 0;

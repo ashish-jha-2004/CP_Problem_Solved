@@ -107,40 +107,44 @@ ll binToDec(string s) { return bitset<64>(s).to_ullong(); }
 string decToBin(ll a) { return bitset<64>(a).to_string(); }
 ll factorial(ll n){if (n==0){ return 1;} ll ans=1;for (ll i=1;i<=n;i++) { ans=mod_mul(ans,i); } return ans; }
 ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,inv(factorial(r))); ans=mod_mul(ans,inv(factorial(n-r))); return ans; }
-
-int dfs(int node, unordered_map<int, list<int>> &graph, vector<bool> &vis) {
-    if (vis[node] == 1) return 0;
-    vis[node] = 1;
-    int ans = 0;
-    for (auto child: graph[node]) {
-        ans += dfs(child, graph, vis) + 1;
-    }
-    return ans;
+int n, m;
+bool vis[1000][1000];
+bool g[1000][1000];
+void dfs(int i, int j) {
+    vis[i][j] = 1;
+    if (i-1 >= 0 and g[i-1][j] and !vis[i-1][j]) dfs(i-1, j);
+    if (i+1 < n and g[i+1][j] and !vis[i+1][j]) dfs(i+1, j);
+    if (j-1 >= 0 and g[i][j-1] and !vis[i][j-1]) dfs(i, j-1);
+    if (j+1 < m and g[i][j+1] and !vis[i][j+1]) dfs(i, j+1);
 }
 
 void solve(){
     // code here
-    d_n(n);
-    unordered_map<int, list<int>> graph;
-    vector<bool> vis(n+1, 0);
-    fn(i, 1, n+1) {
-        d_n(x);
-        graph[i].PB(x);
+    cin >> n >> m;
+    fl(i, n) {
+        fl(j, m) {
+            char it;
+            cin >> it;
+            g[i][j] = (it == '.');
+        }
     }
     int cnt = 0;
-    fn(i, 1, n+1) {
-        if (vis[i] == 0) {
-            int k = dfs(i, graph, vis) - 1;
-            cnt = cnt + (k) / 2;
+    fl(i, n) {
+        fl(j, m) {
+            if (!vis[i][j] and g[i][j]) {
+                dfs(i, j);
+                cnt++;
+            }
         }
     }
     cout << cnt << en;
+    return;
 }
 
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    d_n(t);
+    uint8_t t = 1;
     while (t--){
         solve();
     }

@@ -107,34 +107,27 @@ ll binToDec(string s) { return bitset<64>(s).to_ullong(); }
 string decToBin(ll a) { return bitset<64>(a).to_string(); }
 ll factorial(ll n){if (n==0){ return 1;} ll ans=1;for (ll i=1;i<=n;i++) { ans=mod_mul(ans,i); } return ans; }
 ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,inv(factorial(r))); ans=mod_mul(ans,inv(factorial(n-r))); return ans; }
-
-int dfs(int node, unordered_map<int, list<int>> &graph, vector<bool> &vis) {
-    if (vis[node] == 1) return 0;
-    vis[node] = 1;
-    int ans = 0;
-    for (auto child: graph[node]) {
-        ans += dfs(child, graph, vis) + 1;
-    }
-    return ans;
-}
+const int N = 1e6+1;
+int fib[N];
 
 void solve(){
     // code here
-    d_n(n);
-    unordered_map<int, list<int>> graph;
-    vector<bool> vis(n+1, 0);
-    fn(i, 1, n+1) {
-        d_n(x);
-        graph[i].PB(x);
+    d_n(n, k);
+    int ind = 0;
+    fib[1] = 1 % k;
+    fib[2] = 1 % k;
+    if (k == 1)  {
+        cout << mod_mul(n, 1) << en;
+        return;
     }
-    int cnt = 0;
-    fn(i, 1, n+1) {
-        if (vis[i] == 0) {
-            int k = dfs(i, graph, vis) - 1;
-            cnt = cnt + (k) / 2;
+    fn(i, 3, N) {
+        (fib[i] = (fib[i-1] % k + fib[i-2] % k) % k ) % k;
+        if (fib[i] == 0) {
+            ind = i;
+            break;
         }
     }
-    cout << cnt << en;
+    cout << mod_mul(n, ind) << en;
 }
 
 int main(){
