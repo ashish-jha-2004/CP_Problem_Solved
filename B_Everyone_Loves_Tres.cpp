@@ -111,21 +111,28 @@ ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,i
 void solve(){
     // code here
     d_n(n);
-    if (n <= 3) {
-        pt(-1);
+    if (!(n & 1)) {
+        string s = "";
+        fl(i, n-2) {
+            s.PB('3');
+        }
+        s.push_back('6');
+        s.push_back('6');
+        cout << s << en;
         return;
+    } 
+    else {
+        string s = "36366";
+        if (n < 5) {
+            cout << "-1" << en;
+            return;
+        }
+        string temp = "";
+        fl(i, n-5) {
+            temp.PB('3');
+        }
+        cout << temp << s << en;
     }
-    vl odd;
-    vl even;
-    fl(i, n+1) {
-        if (i == 0 or i == 4 or i == 2) continue;
-        if (i % 2) odd.PB(i);
-        else even.PB(i);
-    }
-    reverse(all(odd));
-    odd.PB(4); 
-    odd.PB(2);
-    cout << odd << even << en;  
 }
 
 int main(){
