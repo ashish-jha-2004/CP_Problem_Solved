@@ -110,14 +110,48 @@ ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,i
 
 void solve(){
     // code here
-    d_n(k, l1, r1, l2, r2);
-    ll kn = 1,ans = 0;
-    for(int n=0; r2/kn>=l1; n++)
-    {
-        ans += max(0ll,min(r2/kn,r1)-max((l2-1)/kn+1,l1)+1ll);
-        kn *= k;
+    d_n(n, l, r);
+    d_v(v, n);
+    l--; r--;
+    vector<ll> right;
+    for (int i{r+1}; i<v.size(); i++) {
+        right.push_back(v[i]);
     }
-    cout << ans << en;
+    vector<ll> left;
+    for (int i{0}; i<l; i++) {
+        left.push_back(v[i]);
+    }
+    vector<ll> middle;
+    for (int i{l}; i<=r; i++) {
+        middle.push_back(v[i]);
+    }
+    sort(all(middle));
+    sort(rall(left));
+    sort(rall(right));
+    // debug(left, right);
+    // return;
+    for (int i{middle.size() - 1}, j{right.size() - 1}; i >= 0 and j >= 0; i--, j--) {
+        middle[i] = min(middle[i], right[j]);
+    }
+    ll sum1 = 0;
+    for (auto it : middle) {
+        sum1 += it;
+    }
+    middle.clear();
+    // cout << sum1 << endl;
+    for (int i{l}; i<=r; i++) {
+        middle.push_back(v[i]);
+    }
+    sort(all(middle));
+    for (int i{middle.size() - 1}, j{left.size() - 1}; i >= 0 and j >= 0; i--, j--) {
+        middle[i] = min(middle[i], left[j]);
+    }
+    ll sum2 = 0;
+    for (auto it : middle) {
+        sum2 += it;
+    }
+    cout << min(sum1, sum2) << endl;
+    return;
 }
 
 int main(){

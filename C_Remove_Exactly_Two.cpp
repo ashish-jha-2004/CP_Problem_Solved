@@ -107,17 +107,30 @@ ll binToDec(string s) { return bitset<64>(s).to_ullong(); }
 string decToBin(ll a) { return bitset<64>(a).to_string(); }
 ll factorial(ll n){if (n==0){ return 1;} ll ans=1;for (ll i=1;i<=n;i++) { ans=mod_mul(ans,i); } return ans; }
 ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,inv(factorial(r))); ans=mod_mul(ans,inv(factorial(n-r))); return ans; }
+const int N = 1e5+1;
+vector<int> tre[N];
+// bool visited[N];
+
+vector<int> rmv(int n) {
+    int maxi = INT_MIN;
+    for (int i{1}; i<n+1; i++) maxi = max(maxi, (int)tre[i].size());
+    for (int i{1}; i<n+1; i++) {
+        if (tre[i].size() == maxi) {
+            return tre[i];
+        }
+    }
+}
 
 void solve(){
     // code here
-    d_n(k, l1, r1, l2, r2);
-    ll kn = 1,ans = 0;
-    for(int n=0; r2/kn>=l1; n++)
-    {
-        ans += max(0ll,min(r2/kn,r1)-max((l2-1)/kn+1,l1)+1ll);
-        kn *= k;
+    d_n(n);
+    fl(i, n-1) {
+        d_n(x, y);
+        tre[x].push_back(y);
     }
-    cout << ans << en;
+    // first removal
+    // first we will remove the element with max child node
+    auto sub_tree = rmv(n);
 }
 
 int main(){

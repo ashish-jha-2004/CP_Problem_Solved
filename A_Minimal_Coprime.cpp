@@ -110,14 +110,8 @@ ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,i
 
 void solve(){
     // code here
-    d_n(k, l1, r1, l2, r2);
-    ll kn = 1,ans = 0;
-    for(int n=0; r2/kn>=l1; n++)
-    {
-        ans += max(0ll,min(r2/kn,r1)-max((l2-1)/kn+1,l1)+1ll);
-        kn *= k;
-    }
-    cout << ans << en;
+    d_n(l, r);
+    cout << r - l + (r == 1) << endl;
 }
 
 int main(){

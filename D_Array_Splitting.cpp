@@ -110,20 +110,48 @@ ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,i
 
 void solve(){
     // code here
-    d_n(k, l1, r1, l2, r2);
-    ll kn = 1,ans = 0;
-    for(int n=0; r2/kn>=l1; n++)
-    {
-        ans += max(0ll,min(r2/kn,r1)-max((l2-1)/kn+1,l1)+1ll);
-        kn *= k;
+    d_n(n, k);
+    d_v(v, n);
+    vl suff(n, 0);
+    ll sum = 0;
+    for (int i{n-1}; i>=0; i--) {
+        sum += v[i];
+        suff[i] = sum;
     }
-    cout << ans << en;
+    debug(suff);
+    int max_length = n - k + 1;
+    int length_reached = n-1, sub_indx = k;
+    int max_indx = n;
+    sum = 0;
+    int last_sum = 0;
+    if (sub_indx == 1) {
+        sum += (suff[0] - last_sum) * sub_indx;
+        cout << sum;
+        return;
+    }
+    while (max_indx >= 0) {
+        int size_left = max_indx + 1;
+        int temp = size_left - max_length - 1;
+        debug(*(suff.begin() + max_indx), temp);
+        max_indx = max_element(suff.begin() + temp, suff.begin() + max_indx) - suff.begin();
+        sum += (suff[max_indx] - last_sum) * sub_indx;
+        last_sum = suff[max_indx];
+        sub_indx--;
+        // max_indx++;
+        debug(max_indx, sum);
+        if (sub_indx == 1) break;
+        max_length = max_indx - sub_indx + 1;
+    }
+    if (sub_indx == 1) {
+        sum += (suff[0] - last_sum) * sub_indx;
+    }
+    cout << sum;
 }
 
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    d_n(t);
+    uint8_t t = 1;
     while (t--){
         solve();
     }

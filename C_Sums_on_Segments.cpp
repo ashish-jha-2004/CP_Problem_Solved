@@ -108,16 +108,111 @@ string decToBin(ll a) { return bitset<64>(a).to_string(); }
 ll factorial(ll n){if (n==0){ return 1;} ll ans=1;for (ll i=1;i<=n;i++) { ans=mod_mul(ans,i); } return ans; }
 ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,inv(factorial(r))); ans=mod_mul(ans,inv(factorial(n-r))); return ans; }
 
+ll maxi(vl &v, int it, int j=0) {
+    ll maxim = INT_MIN, ans = 0;
+    fn(i, j, it) {
+        if (i >= v.size()) return maxim;
+        ans += v[i];
+        maxim = max(maxim, ans);
+        if (ans < 0) ans = 0;
+    }
+    return maxim;
+}
+
+ll mini(vl &v, int i, int j) {
+    int minim = INT_MAX, ans = 0;
+    fn(k, i, j) {
+        if (k >= v.size()) return minim;
+        ans += v[k];
+        minim = min(minim, ans);
+        if (ans > 0) ans = 0;
+    }
+    return minim;
+}
+
 void solve(){
     // code here
-    d_n(k, l1, r1, l2, r2);
-    ll kn = 1,ans = 0;
-    for(int n=0; r2/kn>=l1; n++)
-    {
-        ans += max(0ll,min(r2/kn,r1)-max((l2-1)/kn+1,l1)+1ll);
-        kn *= k;
+    d_n(n);
+    d_v(v, n);
+    int it = 0;
+    while (((v[it] == -1) || v[it] == 1)) it++;
+    ll maxi_left = maxi(v, it);
+    ll maxi_right = maxi(v, v.size(), it + 1);
+    ll mini_left = mini(v, 0, it);
+    ll mini_right = mini(v, it+1, v.size());
+    set<ll> st;
+    // left side
+    st.insert(0);
+    if (maxi_left >= INT_MAX and mini_left <= INT_MIN) {
+        st.insert(0);
     }
-    cout << ans << en;
+    else {
+        while (mini_left <= maxi_left) {
+            st.insert(mini_left);
+            mini_left++;
+        }
+    }
+    // right side
+    if (maxi_right >= INT_MAX and mini_right <= INT_MIN) {
+        st.insert(0);
+    }
+    else {
+        while (mini_right <= maxi_right) {
+            st.insert(mini_right);
+            mini_right++;
+        }
+    }
+    if (it >= v.size()) {
+        cout << st.size() << en;
+        for (auto &k: st) {
+            cout << k << " ";
+        }
+        cout << en;
+        return;
+    }
+    // centre part for minimum
+    ll temp = it, sum = 0, mini_centre_left = INT_MAX;
+    while (temp >= 0) {
+        sum += v[temp];
+        mini_centre_left = min(mini_centre_left, sum);
+        temp--;
+    }
+    ll mini_centre_right = INT_MAX;
+    temp = it;
+    sum = 0;
+    while (temp < v.size()) {
+        sum += v[temp];
+        mini_centre_right = min(mini_centre_right, sum);
+        temp++;
+    }
+    ll mn = v[it] - ((v[it] - mini_centre_left) + (v[it] - mini_centre_right));
+    // centre part for maximum
+    ll new_temp = it, new_sum = 0, maxi_centre_left = INT_MIN;
+    while (new_temp >= 0) {
+        new_sum += v[new_temp];
+        maxi_centre_left = max(maxi_centre_left, new_sum);
+        new_temp--;
+    }
+    new_temp = it;
+    new_sum = 0;
+    ll maxi_centre_right = INT_MIN;
+    while (new_temp < v.size()) {
+        new_sum += v[new_temp];
+        maxi_centre_right = max(maxi_centre_right, new_sum);
+        new_temp++;
+    }
+    ll mx = v[it] + ((maxi_centre_left - v[it]) + (maxi_centre_right - v[it]));
+    // debug(mn, mx, st);
+    while (mn <= mx) {
+        st.insert(mn);
+        mn++;
+    }
+    cout << st.size() << en;
+    for (auto &k: st) {
+        cout << k << " ";
+    }
+    cout << en;
+    return;
 }
 
 int main(){
