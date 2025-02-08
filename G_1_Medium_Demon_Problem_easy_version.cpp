@@ -29,13 +29,21 @@ using namespace std;
 ****************************************************************************************************************************************************************************************************************************************************************************
 */
 
+// Debugging Tools For CP
+#ifndef ONLINE_JUDGE
+#include <debugtemplate.hpp>
+#else
+#define debug(...)
+#endif
+
 typedef long double ld;
 typedef long long ll;
 typedef vector<int> vi;
 typedef vector<ll> vl;
+typedef vector<vector<ll>> vvl;
 typedef vector<char> vc;
-typedef pair<int, int> pii;
-typedef pair<int, char> pic;
+typedef pair<ll, ll> pll;
+typedef pair<ll, char> plc;
 #define fl(i, j) for(int i{0}; i<j; i++)
 #define fb(i, j, k) for (int i{j}; i>=k; i--)
 #define fn(i, j, k) for(int i{j}; i<k; i++)
@@ -43,7 +51,11 @@ typedef pair<int, char> pic;
 #define yes cout << "YES\n"
 #define all(v) v.begin(), v.end()
 #define rall(v) v.rbegin(), v.rend()
-#define d_n(n) ll n; cin >> n
+#define DEFINE_AND_READ(type, ...) type __VA_ARGS__; read(__VA_ARGS__)
+#define d_n(...) DEFINE_AND_READ(ll, __VA_ARGS__)
+#define d_s(...) DEFINE_AND_READ(string, __VA_ARGS__)
+#define d_c(...) DEFINE_AND_READ(char, __VA_ARGS__)
+#define d_d(...) DEFINE_AND_READ(ld, __VA_ARGS__)
 #define d_v(v, n) vl v(n); fl(i, n) cin >> v[i]
 #define en "\n"
 #define F first
@@ -75,6 +87,10 @@ ostream &operator<<(ostream &ostream, const vector<T> &c)
         cout << it << " ";
     return ostream;
 }
+template<typename... T>
+void read(T&... args) {
+    (cin >> ... >> args);
+}
 
 // Number Theory
 const ll MOD = 1e9+7, mod = MOD;
@@ -91,52 +107,100 @@ ll binToDec(string s) { return bitset<64>(s).to_ullong(); }
 string decToBin(ll a) { return bitset<64>(a).to_string(); }
 ll factorial(ll n){if (n==0){ return 1;} ll ans=1;for (ll i=1;i<=n;i++) { ans=mod_mul(ans,i); } return ans; }
 ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,inv(factorial(r))); ans=mod_mul(ans,inv(factorial(n-r))); return ans; }
-const int N = 1e5 + 1;
-int dp[N][101];
 
-ll func(vl &v, ll &m, ll idx = 0, ll prev = 0) {
-    if (idx >= v.size()) return 1;
 
-    if (dp[idx][prev] != -1) return dp[idx][prev];
+void dfs3(ll node, vector<vector<ll>> &bd_graph, vector<bool> &vis) {
+    if (vis[node]) return;
+    vis[node] = true;
+    for (auto n: bd_graph[node]) {
+        dfs3(n, bd_graph, vis);
+    }
+}
 
-    ll ans = 0;
-    
-    // Case 1: The current cell is free (zero).
-    if (v[idx] == 0) {
-        if (prev == 0) {
-            for (ll i = 1; i <= m; i++) {
-                ans = mod_add(ans, func(v, m, idx + 1, i));
-            }
-        } else {
-            for (ll cur = max(1LL, prev - 1); cur <= min(m, prev + 1); cur++) {
-                ans = mod_add(ans, func(v, m, idx + 1, cur));
-            }
+void dfs1(ll node, set<ll> &s, vector<vector<ll>> &graph, vector<bool> &temp_visited) {
+    // debug(node, temp_visited);
+    s.insert(node);
+    if (temp_visited[node] == true) return;
+    temp_visited[node] = true;
+    for (auto nbr: graph[node]) {
+        
+        dfs1(nbr, s, graph, temp_visited);
+    }
+}
+
+ll dfs(ll node, vector<vector<ll>> &graph, vector<bool> &visited) {
+    if (visited[node]) return node;
+    visited[node] = true;
+    ll ret = node;  // or some default value
+    for (auto nbr : graph[node]) {
+        ret = dfs(nbr, graph, visited);  // update ret based on recursion
+    }
+    return ret;
+}
+
+ll dfs2(ll node, vector<vector<ll>> &graph_reverse) {
+    if (graph_reverse[node].empty()) return 0;
+    ll maxim = 0;
+    for (auto nbr: graph_reverse[node]) {
+        maxim = max(dfs2(nbr, graph_reverse)+1, maxim);
+    }
+    return maxim;
+}
+
+ll maxi_depth(ll node, vector<vector<ll>> &graph, vector<vector<ll>> &bd_graph, 
+                vector<vector<ll>> &graph_reverse, vector<bool> &vis, vector<bool> &visited, vector<bool> &temp_visited){
+    dfs3(node, bd_graph, vis);
+    ll node_within_cycle = dfs(node, graph, visited);
+    debug(node_within_cycle);
+    set<ll> s;
+    dfs1(node_within_cycle, s, graph, temp_visited);
+    if (s.size() <= 1) return 0;
+    ll maxi = 0;
+    debug(s);
+    for (auto ele: s) {
+        for (auto child: graph_reverse[ele]) {
+            if (s.count(child) == 1) continue;
+            // height of child
+            maxi = max(dfs2(child, graph_reverse) + 1, maxi);
         }
     }
-    // Case 2: The current cell is fixed (nonzero).
-    else {
-        if (prev != 0 && abs(v[idx] - prev) > 1)
-            return dp[idx][prev] = 0;
-        ans = mod_add(ans, func(v, m, idx + 1, v[idx]));
-    }
-    
-    return (dp[idx][prev] = ans) % MOD;
+    return maxi;
 }
 
 void solve(){
     // code here
-    memset(dp, -1, sizeof dp);
-    ll n, m;
-    cin >> n >> m;
+    d_n(n);
     d_v(v, n);
-    cout << func(v, m) << endl;
+    vector<vector<ll>> graph(n+1);
+    vector<vector<ll>> bd_graph(n+1);
+    vector<vector<ll>> graph_reverse(n+1);
+    vector<bool> vis(n+1, 0);
+    vector<bool> visited(n+1, 0);
+    vector<bool> temp_visited(n+1, 0);
 
+    fl (i, n) {
+        graph[i+1].push_back(v[i]);
+        bd_graph[i+1].push_back(v[i]);
+        bd_graph[v[i]].push_back(i+1);
+        graph_reverse[v[i]].push_back(i+1);
+    }
+    int cnt = 1;
+    ll maxi = 0;
+
+    fn(i, 1, n+1) {
+        // debug(i, visited, maxi);
+        if (!vis[i]) {
+            maxi = max(maxi, maxi_depth(i, graph, bd_graph, graph_reverse, vis, visited, temp_visited));
+        }
+    }
+    cout << maxi + 2 << en;
+    return;
 }
 
 int main(){
     ios::sync_with_stdio(false);
-    cin.tie(nullptr); cout.tie(nullptr);
-    int t = 1;
+    cin.tie(nullptr);
+    d_n(t);
     while (t--){
         solve();
     }
