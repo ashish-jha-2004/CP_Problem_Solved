@@ -93,7 +93,7 @@ void read(T&... args) {
 }
 
 // Number Theory
-const ll MOD = 1e9+7, mod = MOD;
+const ll MOD = 998244353, mod = MOD;
 ll inv(ll i) {if (i == 1) return 1; return (mod - ((mod / i) * inv(mod % i)) % mod) % mod;}
 ll mod_mul(ll a, ll b) {a = a % mod; b = b % mod; return (((a * b) % mod) + mod) % mod;}
 ll mod_add(ll a, ll b) {a = a % mod; b = b % mod; return (((a + b) % mod) + mod) % mod;}
@@ -108,9 +108,48 @@ string decToBin(ll a) { return bitset<64>(a).to_string(); }
 ll factorial(ll n){if (n==0){ return 1;} ll ans=1;for (ll i=1;i<=n;i++) { ans=mod_mul(ans,i); } return ans; }
 ll nCr(ll n, ll r) { if (n<r){ return 0;} ll ans=factorial(n); ans=mod_mul(ans,inv(factorial(r))); ans=mod_mul(ans,inv(factorial(n-r))); return ans; }
 
+const int N = 2e5 + 10;
+int dp[N][2];
+
+ll func(vl &v, int ind = 2, bool prev = 1) {
+    if (ind >= v.size()) return 1;
+    if (dp[ind][prev] != -1) return dp[ind][prev];
+    ll ans = 0;
+    if (prev == 1) {
+        if (v[ind] == v[ind-1]) {
+            // can be honest or not
+            ans = mod_add(ans, mod_add(func(v, ind + 1, 0), func(v, ind + 1, 1)));
+        }
+        else {
+            ans = mod_add(ans, func(v, ind + 1, 0));
+        }
+    }
+    else {
+        if (v[ind] != v[ind - 2] + 1) {
+            return 0;
+        }
+        else if (v[ind] == v[ind - 2] + 1) {
+            ans = mod_add(ans, func(v, ind + 1, 1));
+        }
+        else {
+            return 0;
+        }
+    }
+    return dp[ind][prev] = ans;
+}   
+
 void solve(){
     // code here
-    
+    d_n(n);
+    memset(dp, -1, sizeof dp);
+    vl v;
+    v.push_back(0);
+    v.push_back(0);
+    fl(i, n) {
+        d_n(x);
+        v.PB(x);
+    }
+    cout << func(v) << en;
 }
 
 int main(){
